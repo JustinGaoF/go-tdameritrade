@@ -46,4 +46,3 @@ func main() {
 	}
 	fmt.Printf("%+v", (*quotes)["SPY"])
 }
-

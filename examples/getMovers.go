@@ -40,7 +40,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ph, _, err := c.PriceHistory.PriceHistory(ctx, "SPY", nil)
+	ph, _, err := c.Mover.Mover(ctx, "$SPX.X", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
