@@ -53,4 +53,3 @@ func main() {
 	}
 	fmt.Printf("%+v\n", (*hours)["option"]["EQO"])
 }
-
