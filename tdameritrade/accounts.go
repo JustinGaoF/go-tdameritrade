@@ -429,7 +429,7 @@ func (s *AccountsService) GetOrderByPath(ctx context.Context, accountID string, 
 		return nil, nil, err
 	}
 	var orders []*Order
-	resp, err := s.client.Do(ctx, req, orders)
+	resp, err := s.client.Do(ctx, req, nil)
 	if err != nil {
 		return nil, resp, err
 	}

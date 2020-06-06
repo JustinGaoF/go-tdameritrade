@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/justingaoF/go-tdameritrade/tdameritrade"
+	"github.com/JustinGaoF/go-tdameritrade/tdameritrade"
 	"golang.org/x/oauth2"
 	"log"
 	"os"
