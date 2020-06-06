@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	// pass an http client with auth
+	//pass an http client with auth
 	token := os.Getenv("TDAMERITRADE_CLIENT_ID")
 	if token == "" {
 		log.Fatal("Unauthorized: No token present")
@@ -48,11 +48,9 @@ func main() {
 
 	accountId := (*accounts)[0].AccountID
 
-	//fmt.Printf("%+v", (*accounts)[0].AccountID)
-
 	orderParam := tdameritrade.OrderParams{
-		MaxResults: 10,
-		From:       time.Time{},
+		MaxResults: 5,
+		From:       time.Now().Add(-24 * time.Hour),
 		To:         time.Time{},
 		Status:     "",
 	}

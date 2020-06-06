@@ -425,6 +425,25 @@ func (s *AccountsService) GetOrder(ctx context.Context, accountID, orderID strin
 
 func (s *AccountsService) GetOrderByPath(ctx context.Context, accountID string, orderParams *OrderParams) (*Orders, *Response, error) {
 	u := fmt.Sprintf("accounts/%s/orders", accountID)
+	if orderParams != nil {
+		substr := ""
+		if orderParams.Status != "" {
+			substr = fmt.Sprintf("%s&status=%s", substr, orderParams.Status)
+		}
+		if orderParams.MaxResults != 0 {
+			substr = fmt.Sprintf("%s&maxResults=%d", substr, orderParams.MaxResults)
+		}
+
+		if orderParams.From != (time.Time{}) {
+			start := orderParams.From.Format("2006-01-02")
+			end := time.Now().Format("2006-01-02")
+			if orderParams.To != (time.Time{}) {
+				end = orderParams.To.Format("2006-01-02")
+			}
+			substr = fmt.Sprintf("%s&fromEnteredTime=%s&toEnteredTime=%s", substr, start, end)
+		}
+		u = fmt.Sprintf("%s?%s", u, substr[1:])
+	}
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err

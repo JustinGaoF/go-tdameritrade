@@ -101,7 +101,6 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Res
 	}
 
 	response := newResponse(resp)
-
 	// write to v for that good shit
 	if v != nil {
 		if w, ok := v.(io.Writer); ok {
