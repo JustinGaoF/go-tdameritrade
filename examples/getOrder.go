@@ -1,0 +1,68 @@
+package main
+
+import (
+	"context"
+	"github.com/JustinGaoF/go-tdameritrade/tdameritrade"
+	"golang.org/x/oauth2"
+	"log"
+	"os"
+	"time"
+)
+
+func main() {
+
+	// pass an http client with auth
+	token := os.Getenv("TDAMERITRADE_CLIENT_ID")
+	if token == "" {
+		log.Fatal("Unauthorized: No token present")
+	}
+	refreshToken := os.Getenv("TDAMERITRADE_REFRESH_TOKEN")
+	if refreshToken == "" {
+		log.Fatal("Unauthorized: No refresh token present")
+	}
+
+	conf := oauth2.Config{
+		ClientID: token,
+		Endpoint: oauth2.Endpoint{
+			TokenURL: "https://api.tdameritrade.com/v1/oauth2/token",
+		},
+		RedirectURL: "https://localhost",
+	}
+
+	tkn := &oauth2.Token{
+		RefreshToken: refreshToken,
+	}
+
+	ctx := context.Background()
+	tc := conf.Client(ctx, tkn)
+
+	c, err := tdameritrade.NewClient(tc)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	accounts, _, err := c.Account.GetAccounts(ctx, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	accountId := (*accounts)[0].AccountID
+
+	//fmt.Printf("%+v", (*accounts)[0].AccountID)
+
+	orderParam := tdameritrade.OrderParams{
+		MaxResults: 10,
+		From:       time.Time{},
+		To:         time.Time{},
+		Status:     "",
+	}
+
+	orders, _, err := c.Account.GetOrderByPath(ctx, string(accountId), &orderParam)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	size := len(*orders)
+
+	log.Println("get orders count", size)
+}

@@ -8,6 +8,7 @@ import (
 )
 
 type Accounts []*Account
+type Orders []*Order
 
 type Account struct {
 	SecuritiesAccount `json:"securitiesAccount"`
@@ -170,8 +171,8 @@ type OrderLegCollection struct {
 	Instrument     Instrument `json:"instrument"`
 	Instruction    string     `json:"instruction"`
 	PositionEffect string     `json:"positionEffect,omitempty"`
-	Quantity       int        `json:"quantity"`
-	QuantityType   string     `json:"quantityType,omitempty"`
+	Quantity       float32    `json:"quantity"`
+	//QuantityType   string     `json:"quantityType,omitempty"`
 }
 
 type CancelTime struct {
@@ -422,14 +423,14 @@ func (s *AccountsService) GetOrder(ctx context.Context, accountID, orderID strin
 	return s.client.Do(ctx, req, nil)
 }
 
-func (s *AccountsService) GetOrderByPath(ctx context.Context, accountID string, orderParams *OrderParams) ([]*Order, *Response, error) {
+func (s *AccountsService) GetOrderByPath(ctx context.Context, accountID string, orderParams *OrderParams) (*Orders, *Response, error) {
 	u := fmt.Sprintf("accounts/%s/orders", accountID)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
-	var orders []*Order
-	resp, err := s.client.Do(ctx, req, nil)
+	orders := new(Orders)
+	resp, err := s.client.Do(ctx, req, orders)
 	if err != nil {
 		return nil, resp, err
 	}
